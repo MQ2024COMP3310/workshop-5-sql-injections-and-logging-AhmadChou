@@ -56,18 +56,18 @@ public class App {
             String line;
             int i = 1;
             while ((line = br.readLine()) != null) {
-                if (line.matches("[a-z]{1,4}+$")) {
-                    System.out.println(line);
+                if (line.matches("[a-z]{4}+$")) {
+                    logger.log(Level.INFO, line);
                     wordleDatabaseConnection.addValidWord(i, line);
                 } else {
-                    System.out.println("Ignored unaacceptable input.");
+                    String str = String.format("Unacceptable input: %s", line);
+                    logger.log(Level.SEVERE, str);
                 }
                 i++;
             }
 
         } catch (IOException e) {
-            System.out.println("Not able to load . Sorry!");
-            System.out.println(e.getMessage());
+            logger.log(Level.WARNING, "Not able to load.", e);
             return;
         }
 
@@ -78,8 +78,10 @@ public class App {
             String guess = scanner.nextLine();
 
             while (!guess.equals("q")) {
-                while (!guess.matches("[a-z]{1,4}+$")) {
-                    System.out.println("Not a valid input.");
+                while (!guess.matches("[a-z]{4}+$")) {
+                    String str = String.format("Invalid guess: %s", guess);
+                    logger.log(Level.INFO, str);
+                    System.out.println("Not a valid guess.");
                     guess = scanner.nextLine();
                 }
 
@@ -95,7 +97,7 @@ public class App {
                 guess = scanner.nextLine();
             }
         } catch (NoSuchElementException | IllegalStateException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "Could not read inputs.", e);
         }
 
     }
